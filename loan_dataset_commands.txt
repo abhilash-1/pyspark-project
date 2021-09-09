@@ -1,0 +1,66 @@
+spark-shell   --packages com.databricks:spark-csv_2.11:1.2.0
+
+val sqlContext = new org.apache.spark.sql.SQLContext(sc)
+
+val df = sqlContext.read.format("com.databricks.spark.csv").option("header","true").option("inferSchema","true").load("/home/user/Desktop/loan.csv")
+
+df.show(20)
+
+val df1 = df.groupBy("Loan Category").count()
+
+df1.show()
+
+val df2 = df.groupBy("Occupation").count()
+df2.show()
+
+/*** ON DATABricks **/
+
+
+from pyspark.sql import *
+spark = SparkSession.builder.getOrCreate()
+
+df = spark.read.csv('dbfs:/FileStore/tables/loan.csv', inferSchema=True, header =True)
+
+df.show()
+
+df1 = df.groupBy("Loan Category").count()
+df1.show()
+
+## Partition on Loan Category
+df.write.option("header",True).partitionBy("Loan Category").mode("overwrite").csv("dbfs:/FileStore/tables/partition.csv")
+
+
+
+# TRANSACTION DATASET
+
+txn = spark.read.csv('dbfs:/FileStore/tables/txn.csv', inferSchema=True, header =True)
+
+-> COUNT OF TRANSACTION ON EVERY ACCOUNT
+txn.groupBy("Account No").count().show()
+
+-> Maximum withdrawal amount
+txn.groupBy(" WITHDRAWAL AMT ").max().show(1)
+
+
+-> MINIMUM WITHDRAWAL AMOUNT OF AN ACCOUNT
+txn.groupBy(" WITHDRAWAL AMT ").min().show(1)
+
+-> MAXIMUM DEPOSIT AMOUNT OF AN ACCOUNT
+txn.groupBy(" DEPOSIT AMT ").max().show(1)
+
+-> MINIMUM DEPOSIT AMOUNT OF AN ACCOUNT
+txn.groupBy(" DEPOSIT AMT ").min().show(1)
+
+-> sum of balance in every bank account
+txn.groupBy("Account No").sum("BALANCE AMT").show()
+
+->COUNT OF EVERY TRANSACTION METHODS
+txn.groupBy("TRANSACTION DETAILS").count().show()
+
+-> Number of transaction on each date
+txn.groupBy("VALUE DATE").count().show()
+
+
+-> List of customers with withdrawal amount more than 1 lakh
+df = txn.filter(txn[" WITHDRAWAL AMT "]>100000)
+df["Account No","TRANSACTION DETAILS"," WITHDRAWAL AMT "].show()
