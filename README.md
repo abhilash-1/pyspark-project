@@ -6,7 +6,10 @@ This is the first project where we worked on apache spark, In this project what 
  So now let me explain the dataflow of how we have done is, first primarly we have ingested the data that is , we retrieved the data and then downloaded the datasets from kaggle and then we stored this datasets in cloud storage and imported from MYSQL to hive by sqoop this is how we have ingested the data , second after ingesting the data we have process the large datasets in hive and then after we have anlyse the data using pyspark in jupyter notebook 
                             
  ##TECHNOLOGIES USED:
- Spark SQL, Spark, HDFS, Hive
+ Spark SQL
+ Spark
+ HDFS
+ Hive
                           
  ##ROLES AND RESPONSIBLITIES:
  Collaborated in a team of 6 members using version control with Git/Github.
